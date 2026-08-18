@@ -189,3 +189,24 @@ frontend/src/features/{module}/
 | `config/nova.php` for env access | All `env()` calls centralized — compatible with `config:cache` |
 | PostgreSQL | Required for future financial data (NUMERIC type), advanced constraints, UUID support |
 | No Redis in Stage 0 | Not required yet; will be introduced when queues/caching needs materialize |
+| sessionStorage for token | Used for client session restoration on refresh in local/staging; XSS warning acknowledged, HttpOnly cookies deferred to final production |
+| Request-scoped permission cache | Instance-level array on User model prevents N+1 queries on permission checks without leaking state globally |
+| Global vs Scoped Master Data | Global: Category, Brand, Unit, Product (no company_id); Company-scoped: Customer, Supplier; Branch-scoped: Warehouse |
+
+---
+
+## Authorization & Scope Boundaries (Stage 1)
+
+### Request Authorization Flow
+To safely support permission-based capabilities and data-ownership security policies without conflicts:
+- **Permission Middleware (`CheckPermission`)**: Validates if the authenticated user has a general system capability (e.g. `products.update`). Super Admin bypasses this.
+- **Eloquent Policies**: Checks record-level context (e.g. "Can this user edit *this* specific warehouse?"). Super Admins do **not** bypass Policy rules.
+
+### Organizational Scope Mapping
+All transactional modules must enforce matching scopes:
+- **Scoping Context**: `User → Employee (optional) → Company → Branch`.
+- **Composite Unique Constraints**: Enforced at the database level to ensure codes are scoped within branches/companies:
+  - Branch codes: `UNIQUE(company_id, branch_code)`
+  - Department codes: `UNIQUE(branch_id, department_code)`
+  - Warehouse codes: `UNIQUE(branch_id, warehouse_code)`
+

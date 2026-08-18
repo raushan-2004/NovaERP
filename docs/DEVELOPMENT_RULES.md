@@ -147,3 +147,23 @@ Each Antigravity stage follows this pattern:
 - **Stage 0** — Foundation ✅ (current)
 - **Stage 1** — Authentication completion + RBAC + Organization + Master Data
 - **Stage 2+** — ERP business modules (assigned per stage)
+
+---
+
+## 10. Company/Branch Scoping Rules
+Future transactional and ledger modules (Sales, Purchasing, Inventory, Accounting) must respect the company and branch scopes of the active user session:
+- **Active Context**: Scope resolves as: `User → Employee → Company → Branch`.
+- **Query Boundary**: All transactional record selections must explicitly filter by company/branch (e.g. `company_id` on Sales Orders, `branch_id` on Inventory Stock, `branch_id` on Warehouses).
+- **Master Data Separation**:
+  - Global master data (`Category`, `Brand`, `Unit`, `Product`) must **never** contain a `company_id` field.
+  - Company-scoped master data (`Customer`, `Supplier`) must filter by `company_id`.
+  - Branch-scoped master data (`Warehouse`) must filter by `branch_id`.
+
+---
+
+## 11. Authorization Architecture Rules
+We maintain a strict boundary between permission checks and policy checks:
+1. **Permission-Level check (General)**: Run before controllers via `CheckPermission` middleware or Route configuration to verify if a user has a general capability (e.g. `products.update`).
+2. **Policy-Level check (Record Specific)**: Handled via standard Laravel Policies (e.g. `ProductPolicy`) to verify record-level ownership or organizational scope matching.
+3. **Super Admin boundary**: Super Admins bypass permission-level checks (`CheckPermission` middleware), but must **not** automatically bypass record-level Policies. This prevents accidental cross-company data access.
+

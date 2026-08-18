@@ -1,46 +1,79 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { usePermission } from '../../hooks/usePermission';
+import { Icons } from '../common/Icons';
 
 interface NavItem {
   label: string;
   path: string;
-  icon: string;
+  icon: React.ComponentType<{ size?: number }>;
+  permission: string;
 }
 
-// Stage 0: only Dashboard. Future ERP modules will be added here in later stages.
-const navItems: NavItem[] = [
-  { label: 'Dashboard', path: '/dashboard', icon: '⊞' },
-];
-
-// Placeholder items showing future module structure (not yet implemented)
-const futureModules: string[] = [
-  'Organization',
-  'CRM',
-  'Sales',
-  'Purchasing',
-  'Inventory',
-  'Manufacturing',
-  'Accounting',
-  'HR & Payroll',
-];
+interface NavSection {
+  title: string;
+  permissionCheck: (hasPermission: (p: string) => boolean) => boolean;
+  items: NavItem[];
+}
 
 function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
+  const { hasPermission } = usePermission();
+
+  const sections: NavSection[] = [
+    {
+      title: 'Administration',
+      permissionCheck: (has) => has('roles.view') || has('users.view'),
+      items: [
+        { label: 'Roles', path: '/rbac/roles', icon: Icons.Shield, permission: 'roles.view' },
+        { label: 'Users', path: '/rbac/users', icon: Icons.Users, permission: 'users.view' },
+      ],
+    },
+    {
+      title: 'Organization',
+      permissionCheck: (has) => has('organization.view') || has('employees.view'),
+      items: [
+        { label: 'Companies', path: '/org/companies', icon: Icons.Org, permission: 'organization.view' },
+        { label: 'Branches', path: '/org/branches', icon: Icons.Org, permission: 'organization.view' },
+        { label: 'Departments', path: '/org/departments', icon: Icons.Org, permission: 'organization.view' },
+        { label: 'Employees', path: '/org/employees', icon: Icons.Users, permission: 'employees.view' },
+      ],
+    },
+    {
+      title: 'Master Data',
+      permissionCheck: (has) =>
+        has('products.view') ||
+        has('customers.view') ||
+        has('suppliers.view') ||
+        has('warehouses.view'),
+      items: [
+        { label: 'Categories', path: '/master/categories', icon: Icons.Folder, permission: 'products.view' },
+        { label: 'Brands', path: '/master/brands', icon: Icons.Folder, permission: 'products.view' },
+        { label: 'Units (UOM)', path: '/master/units', icon: Icons.Folder, permission: 'products.view' },
+        { label: 'Products', path: '/master/products', icon: Icons.Settings, permission: 'products.view' },
+        { label: 'Customers', path: '/master/customers', icon: Icons.Users, permission: 'customers.view' },
+        { label: 'Suppliers', path: '/master/suppliers', icon: Icons.Users, permission: 'suppliers.view' },
+        { label: 'Warehouses', path: '/master/warehouses', icon: Icons.Settings, permission: 'warehouses.view' },
+      ],
+    },
+  ];
 
   return (
-    <aside className={`nova-sidebar${collapsed ? ' nova-sidebar--collapsed' : ''}`}>
+    <aside className={`nova-sidebar${collapsed ? ' nova-sidebar--collapsed' : ''} border-r border-nova-700/60 bg-nova-800`}>
       {/* Brand */}
-      <div className="nova-sidebar-brand">
-        <div className="nova-sidebar-logo">N</div>
-        {!collapsed && (
-          <div className="nova-sidebar-brand-text">
-            <span className="nova-sidebar-brand-name">NovaERP</span>
-            <span className="nova-sidebar-brand-sub">NovaTech Industries</span>
-          </div>
-        )}
+      <div className="nova-sidebar-brand border-b border-nova-700/60 p-4 min-h-[64px] flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className="nova-sidebar-logo w-9 h-9 bg-accent-500 text-white font-bold rounded-lg flex items-center justify-center">N</div>
+          {!collapsed && (
+            <div className="nova-sidebar-brand-text">
+              <span className="nova-sidebar-brand-name font-bold text-sm text-text-primary">NovaERP</span>
+              <span className="nova-sidebar-brand-sub text-[10px] text-text-muted">NovaTech Industries</span>
+            </div>
+          )}
+        </div>
         <button
           id="sidebar-collapse-btn"
-          className="nova-sidebar-collapse-btn"
+          className="nova-sidebar-collapse-btn p-1.5 hover:bg-nova-700 rounded-lg text-text-muted hover:text-text-primary transition"
           onClick={() => setCollapsed(!collapsed)}
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
@@ -49,39 +82,59 @@ function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="nova-sidebar-nav" aria-label="Main navigation">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            id={`nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
-            className={({ isActive }) =>
-              `nova-sidebar-link${isActive ? ' nova-sidebar-link--active' : ''}`
-            }
-          >
-            <span className="nova-sidebar-link-icon">{item.icon}</span>
-            {!collapsed && <span className="nova-sidebar-link-label">{item.label}</span>}
-          </NavLink>
-        ))}
+      <nav className="nova-sidebar-nav flex-1 py-4 px-2 overflow-y-auto flex flex-col gap-1" aria-label="Main navigation">
+        <NavLink
+          to="/dashboard"
+          id="nav-dashboard"
+          className={({ isActive }) =>
+            `nova-sidebar-link flex items-center gap-3 p-2.5 rounded-lg text-sm transition ${
+              isActive ? 'bg-nova-600 text-text-primary' : 'text-text-secondary hover:bg-nova-700 hover:text-text-primary'
+            }`
+          }
+        >
+          <span className="nova-sidebar-link-icon"><Icons.Dashboard size={18} /></span>
+          {!collapsed && <span className="nova-sidebar-link-label font-medium">Dashboard</span>}
+        </NavLink>
 
-        {/* Future modules — placeholder structure */}
-        {!collapsed && (
-          <div className="nova-sidebar-section">
-            <span className="nova-sidebar-section-label">Coming in future stages</span>
-            {futureModules.map((mod) => (
-              <div key={mod} className="nova-sidebar-link nova-sidebar-link--disabled">
-                <span className="nova-sidebar-link-icon">○</span>
-                <span className="nova-sidebar-link-label">{mod}</span>
-              </div>
-            ))}
-          </div>
-        )}
+        {sections.map((section) => {
+          if (!section.permissionCheck(hasPermission)) return null;
+
+          return (
+            <div key={section.title} className="flex flex-col gap-1 mt-4">
+              {!collapsed && (
+                <span className="nova-sidebar-section-label px-3 text-[10px] font-bold text-text-muted uppercase tracking-wider">
+                  {section.title}
+                </span>
+              )}
+              {section.items.map((item) => {
+                if (!hasPermission(item.permission)) return null;
+                const Icon = item.icon;
+
+                return (
+                  <NavLink
+                    key={item.path}
+                    to={item.path}
+                    id={`nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
+                    className={({ isActive }) =>
+                      `nova-sidebar-link flex items-center gap-3 p-2.5 rounded-lg text-sm transition ${
+                        isActive ? 'bg-nova-600 text-text-primary' : 'text-text-secondary hover:bg-nova-700 hover:text-text-primary'
+                      }`
+                    }
+                  >
+                    <span className="nova-sidebar-link-icon"><Icon size={18} /></span>
+                    {!collapsed && <span className="nova-sidebar-link-label font-medium">{item.label}</span>}
+                  </NavLink>
+                );
+              })}
+            </div>
+          );
+        })}
       </nav>
 
       {/* Footer */}
       {!collapsed && (
-        <div className="nova-sidebar-footer">
-          <span>Stage 0 — Foundation</span>
+        <div className="nova-sidebar-footer p-4 border-t border-nova-700/60 text-center text-[10px] text-text-muted">
+          <span>NovaTech v1.0 • Stage 1</span>
         </div>
       )}
     </aside>

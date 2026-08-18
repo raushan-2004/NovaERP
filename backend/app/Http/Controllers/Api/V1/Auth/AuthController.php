@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Http\Controllers\Controller;
@@ -24,13 +26,11 @@ class AuthController extends Controller
             deviceName: $request->header('User-Agent', 'api'),
         );
 
+        $userData = $this->formatUserResponse($result['user']);
+
         return ApiResponse::success([
             'token' => $result['token'],
-            'user'  => [
-                'id'    => $result['user']->id,
-                'name'  => $result['user']->name,
-                'email' => $result['user']->email,
-            ],
+            'user'  => $userData,
         ], 'Logged in successfully');
     }
 
@@ -39,14 +39,9 @@ class AuthController extends Controller
      */
     public function me(Request $request): JsonResponse
     {
-        $user = $request->user();
+        $userData = $this->formatUserResponse($request->user());
 
-        return ApiResponse::success([
-            'id'         => $user->id,
-            'name'       => $user->name,
-            'email'      => $user->email,
-            'created_at' => $user->created_at,
-        ], 'Authenticated user retrieved');
+        return ApiResponse::success($userData, 'Authenticated user retrieved');
     }
 
     /**
@@ -57,5 +52,46 @@ class AuthController extends Controller
         $this->authService->logout($request->user());
 
         return ApiResponse::success(null, 'Logged out successfully');
+    }
+
+    /**
+     * Formats user response including scoped roles, permissions and company/branch context.
+     * Uses loadMissing to prevent N+1 queries.
+     */
+    private function formatUserResponse($user): array
+    {
+        $user->loadMissing([
+            'roles.permissions',
+            'employee.company',
+            'employee.branch',
+            'employee.department',
+        ]);
+
+        return [
+            'id'          => $user->id,
+            'name'        => $user->name,
+            'email'       => $user->email,
+            'roles'       => $user->roles->pluck('name')->toArray(),
+            'permissions' => $user->getAllPermissions(),
+            'employee'    => $user->employee ? [
+                'id'            => $user->employee->id,
+                'employee_code' => $user->employee->employee_code,
+                'first_name'    => $user->employee->first_name,
+                'last_name'     => $user->employee->last_name,
+                'designation'   => $user->employee->designation,
+                'company'       => $user->employee->company ? [
+                    'id'   => $user->employee->company->id,
+                    'name' => $user->employee->company->name,
+                ] : null,
+                'branch'        => $user->employee->branch ? [
+                    'id'   => $user->employee->branch->id,
+                    'name' => $user->employee->branch->name,
+                ] : null,
+                'department'    => $user->employee->department ? [
+                    'id'   => $user->employee->department->id,
+                    'name' => $user->employee->department->name,
+                ] : null,
+            ] : null,
+        ];
     }
 }

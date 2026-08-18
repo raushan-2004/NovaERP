@@ -37,13 +37,8 @@ export function useLogin() {
     mutationFn: (credentials: LoginCredentials) => apiLogin(credentials),
     onSuccess: (data) => {
       setToken(data.token);
-      // Seed user data from login response so /me is immediately available
-      queryClient.setQueryData(AUTH_ME_QUERY_KEY, {
-        id: data.user.id,
-        name: data.user.name,
-        email: data.user.email,
-        created_at: '',
-      });
+      // Seed full user data from login response so /me is immediately available
+      queryClient.setQueryData(AUTH_ME_QUERY_KEY, data.user);
       navigate('/dashboard');
     },
   });

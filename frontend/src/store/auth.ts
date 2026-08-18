@@ -22,12 +22,16 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>()((set) => ({
-  token: null,
-  isAuthenticated: false,
+  token: sessionStorage.getItem('nova_token'),
+  isAuthenticated: !!sessionStorage.getItem('nova_token'),
 
-  setToken: (token: string) =>
-    set({ token, isAuthenticated: true }),
+  setToken: (token: string) => {
+    sessionStorage.setItem('nova_token', token);
+    set({ token, isAuthenticated: true });
+  },
 
-  clearAuth: () =>
-    set({ token: null, isAuthenticated: false }),
+  clearAuth: () => {
+    sessionStorage.removeItem('nova_token');
+    set({ token: null, isAuthenticated: false });
+  },
 }));

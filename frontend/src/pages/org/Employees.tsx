@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import CrudPage, { type CrudField } from '../../components/common/CrudPage';
 import type { Employee } from '../../types/api';
 

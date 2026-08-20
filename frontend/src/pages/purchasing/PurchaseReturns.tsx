@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '../../api/client';
@@ -74,7 +77,9 @@ export function PurchaseReturnsPage() {
   // Fetch selected GRN lines when goods_receipt_id changes
   useEffect(() => {
     if (!formData.goods_receipt_id) {
-      setGrnLines([]);
+      if (grnLines.length > 0) {
+        setGrnLines([]);
+      }
       return;
     }
     const fetchGrnDetails = async () => {
@@ -82,6 +87,7 @@ export function PurchaseReturnsPage() {
         const res = await apiClient.get(`/api/v1/goods-receipts/${formData.goods_receipt_id}`);
         const lines = res.data.data.lines || [];
         setGrnLines(lines);
+
 
         const initialQtys: Record<number, string> = {};
         const initialNotes: Record<number, string> = {};

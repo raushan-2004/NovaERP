@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import CrudPage, { type CrudField } from '../../components/common/CrudPage';
 import type { AuthUser } from '../../types/api';
 

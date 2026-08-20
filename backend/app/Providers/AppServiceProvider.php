@@ -31,6 +31,13 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(\App\Models\PurchaseOrder::class,   \App\Policies\PurchaseOrderPolicy::class);
         Gate::policy(\App\Models\GoodsReceipt::class,    \App\Policies\GoodsReceiptPolicy::class);
         Gate::policy(\App\Models\PurchaseReturn::class,  \App\Policies\PurchaseReturnPolicy::class);
+        Gate::policy(\App\Models\SalesQuotation::class,  \App\Policies\SalesQuotationPolicy::class);
+        Gate::policy(\App\Models\SalesOrder::class,      \App\Policies\SalesOrderPolicy::class);
+        Gate::policy(\App\Models\Delivery::class,        \App\Policies\DeliveryPolicy::class);
+        Gate::policy(\App\Models\SalesReturn::class,     \App\Policies\SalesReturnPolicy::class);
+        Gate::policy(\App\Models\SalesInvoice::class,    \App\Policies\SalesInvoicePolicy::class);
+        Gate::policy(\App\Models\CustomerPayment::class, \App\Policies\CustomerPaymentPolicy::class);
+        Gate::policy(\App\Models\CustomerActivity::class,\App\Policies\CustomerActivityPolicy::class);
 
         // 1. Super Admin permission-level bypass in Gate::before()
         Gate::before(function (User $user, string $ability, array $args) {
@@ -70,6 +77,15 @@ class AppServiceProvider extends ServiceProvider
             'purchase_orders.approve',
             'goods_receipts.view', 'goods_receipts.create',
             'purchase_returns.view', 'purchase_returns.create',
+            // Stage 3 — Sales
+            'quotations.view', 'quotations.create', 'quotations.update', 'quotations.approve', 'quotations.delete',
+            'sales_orders.view', 'sales_orders.create', 'sales_orders.update', 'sales_orders.approve', 'sales_orders.delete',
+            'deliveries.view', 'deliveries.create', 'deliveries.complete',
+            'sales_returns.view', 'sales_returns.create', 'sales_returns.approve',
+            'sales_invoices.view', 'sales_invoices.create', 'sales_invoices.issue',
+            'customer_payments.view', 'customer_payments.create',
+            // Stage 3 — CRM
+            'crm.view', 'crm.create', 'crm.update',
         ];
 
         foreach ($permissions as $permission) {

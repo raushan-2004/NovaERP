@@ -51,6 +51,16 @@ class User extends Authenticatable
         return $this->hasOne(Employee::class);
     }
 
+    public function getCompanyIdAttribute(): ?int
+    {
+        return $this->employee?->company_id;
+    }
+
+    public function getBranchIdAttribute(): ?int
+    {
+        return $this->employee?->branch_id;
+    }
+
     /**
      * Get all unique permissions mapped to this user.
      */

@@ -413,3 +413,207 @@ export interface PurchaseReturn {
   lines?: PurchaseReturnLine[];
   created_at: string;
 }
+
+// ─── Stage 3 — Sales & CRM Types ─────────────────────────────────────────────
+
+export interface SalesQuotationLine {
+  id: number;
+  sales_quotation_id: number;
+  product_id: number;
+  unit_id: number;
+  quantity: string;
+  unit_price: string;
+  discount: string;
+  tax_rate: string;
+  tax_amount: string;
+  line_total: string;
+  product?: Product;
+  unit?: Unit;
+}
+
+export interface SalesQuotation {
+  id: number;
+  quotation_number: string;
+  company_id: number;
+  branch_id: number;
+  customer_id: number;
+  created_by: number;
+  quotation_date: string;
+  expiry_date: string | null;
+  status: string;
+  notes: string | null;
+  subtotal: string;
+  discount: string;
+  tax: string;
+  total: string;
+  company?: Company;
+  branch?: Branch;
+  customer?: Customer;
+  lines?: SalesQuotationLine[];
+  created_at: string;
+}
+
+export interface SalesOrderLine {
+  id: number;
+  sales_order_id: number;
+  product_id: number;
+  unit_id: number;
+  quantity: string;
+  unit_price: string;
+  discount: string;
+  tax_rate: string;
+  tax_amount: string;
+  line_total: string;
+  delivered_quantity: string;
+  invoiced_quantity: string;
+  product?: Product;
+  unit?: Unit;
+}
+
+export interface SalesOrder {
+  id: number;
+  order_number: string;
+  company_id: number;
+  branch_id: number;
+  customer_id: number;
+  sales_quotation_id: number | null;
+  created_by: number;
+  order_date: string;
+  expected_delivery_date: string | null;
+  status: string;
+  notes: string | null;
+  subtotal: string;
+  discount: string;
+  tax: string;
+  total: string;
+  company?: Company;
+  branch?: Branch;
+  customer?: Customer;
+  lines?: SalesOrderLine[];
+  created_at: string;
+}
+
+export interface DeliveryLine {
+  id: number;
+  delivery_id: number;
+  sales_order_line_id: number;
+  product_id: number;
+  ordered_quantity: string;
+  delivered_quantity: string;
+  product?: Product;
+}
+
+export interface Delivery {
+  id: number;
+  delivery_number: string;
+  sales_order_id: number;
+  customer_id: number;
+  warehouse_id: number;
+  delivered_by: number;
+  delivery_date: string;
+  status: string;
+  notes: string | null;
+  sales_order?: SalesOrder;
+  customer?: Customer;
+  warehouse?: Warehouse;
+  lines?: DeliveryLine[];
+  created_at: string;
+}
+
+export interface SalesReturnLine {
+  id: number;
+  sales_return_id: number;
+  product_id: number;
+  quantity: string;
+  delivery_line_id: number;
+  notes: string | null;
+  product?: Product;
+}
+
+export interface SalesReturn {
+  id: number;
+  return_number: string;
+  customer_id: number;
+  sales_order_id: number;
+  warehouse_id: number;
+  returned_by: number;
+  returned_date: string;
+  reason: string;
+  status: string;
+  customer?: Customer;
+  sales_order?: SalesOrder;
+  warehouse?: Warehouse;
+  lines?: SalesReturnLine[];
+  created_at: string;
+}
+
+export interface SalesInvoiceLine {
+  id: number;
+  sales_invoice_id: number;
+  product_id: number;
+  quantity: string;
+  unit_id: number;
+  unit_price: string;
+  discount: string;
+  tax_rate: string;
+  tax_amount: string;
+  line_total: string;
+  sales_order_line_id: number | null;
+  delivery_line_id: number | null;
+  product?: Product;
+  unit?: Unit;
+}
+
+export interface SalesInvoice {
+  id: number;
+  invoice_number: string;
+  customer_id: number;
+  company_id: number;
+  branch_id: number;
+  sales_order_id: number | null;
+  created_by: number;
+  invoice_date: string;
+  due_date: string;
+  status: string;
+  notes: string | null;
+  subtotal: string;
+  discount: string;
+  tax: string;
+  total: string;
+  amount_paid: string;
+  amount_due: string;
+  customer?: Customer;
+  company?: Company;
+  branch?: Branch;
+  sales_order?: SalesOrder;
+  lines?: SalesInvoiceLine[];
+  created_at: string;
+}
+
+export interface CustomerPayment {
+  id: number;
+  payment_number: string;
+  customer_id: number;
+  sales_invoice_id: number;
+  recorded_by: number;
+  payment_date: string;
+  amount: string;
+  payment_method: string;
+  reference: string | null;
+  notes: string | null;
+  customer?: Customer;
+  sales_invoice?: SalesInvoice;
+  created_at: string;
+}
+
+export interface CustomerActivity {
+  id: number;
+  customer_id: number;
+  user_id: number;
+  activity_type: string;
+  activity_date: string;
+  description: string;
+  notes: string | null;
+  customer?: Customer;
+  created_at: string;
+}

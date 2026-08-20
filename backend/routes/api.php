@@ -22,11 +22,23 @@ use App\Http\Controllers\Api\V1\Inventory\StockBalanceController;
 use App\Http\Controllers\Api\V1\Inventory\StockLedgerController;
 use App\Http\Controllers\Api\V1\Inventory\StockTransferController;
 use App\Http\Controllers\Api\V1\Inventory\StockAdjustmentController;
+
 // Stage 2 — Purchasing
 use App\Http\Controllers\Api\V1\Purchasing\PurchaseRequestController;
 use App\Http\Controllers\Api\V1\Purchasing\PurchaseOrderController;
 use App\Http\Controllers\Api\V1\Purchasing\GoodsReceiptController;
 use App\Http\Controllers\Api\V1\Purchasing\PurchaseReturnController;
+
+// Stage 3 — Sales & CRM
+use App\Http\Controllers\Api\V1\Sales\SalesQuotationController;
+use App\Http\Controllers\Api\V1\Sales\SalesOrderController;
+use App\Http\Controllers\Api\V1\Sales\DeliveryController;
+use App\Http\Controllers\Api\V1\Sales\SalesReturnController;
+use App\Http\Controllers\Api\V1\Sales\SalesInvoiceController;
+use App\Http\Controllers\Api\V1\Sales\CustomerPaymentController;
+use App\Http\Controllers\Api\V1\Sales\CustomerActivityController;
+use App\Http\Controllers\Api\V1\Sales\SalesDashboardController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,6 +48,7 @@ use Illuminate\Support\Facades\Route;
 |
 | All routes are prefixed with /api/v1 by the framework.
 | Follow conventions defined in docs/API_CONTRACT.md.
+|
 |
 */
 
@@ -117,6 +130,37 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('purchase-returns', PurchaseReturnController::class)
             ->only(['index', 'store', 'show']);
         Route::post('purchase-returns/{purchase_return}/complete', [PurchaseReturnController::class, 'complete']);
+
+        // ---------------------------------------------------------------
+        // Stage 3 — Sales & CRM
+        // ---------------------------------------------------------------
+        Route::get('sales/dashboard', SalesDashboardController::class);
+
+        Route::apiResource('quotations', SalesQuotationController::class);
+        Route::post('quotations/{quotation}/send',           [SalesQuotationController::class, 'send']);
+        Route::post('quotations/{quotation}/accept',         [SalesQuotationController::class, 'accept']);
+        Route::post('quotations/{quotation}/reject',         [SalesQuotationController::class, 'reject']);
+        Route::post('quotations/{quotation}/convert-to-so',  [SalesQuotationController::class, 'convertToSalesOrder']);
+
+        Route::apiResource('sales-orders', SalesOrderController::class);
+        Route::post('sales-orders/{sales_order}/submit',     [SalesOrderController::class, 'submit']);
+        Route::post('sales-orders/{sales_order}/approve',    [SalesOrderController::class, 'approve']);
+        Route::post('sales-orders/{sales_order}/cancel',     [SalesOrderController::class, 'cancel']);
+
+        Route::apiResource('deliveries', DeliveryController::class)->only(['index', 'store', 'show']);
+        Route::post('deliveries/{delivery}/complete',        [DeliveryController::class, 'complete']);
+
+        Route::apiResource('sales-returns', SalesReturnController::class)->only(['index', 'store', 'show']);
+        Route::post('sales-returns/{sales_return}/approve',  [SalesReturnController::class, 'approve']);
+        Route::post('sales-returns/{sales_return}/complete', [SalesReturnController::class, 'complete']);
+        Route::post('sales-returns/{sales_return}/cancel',   [SalesReturnController::class, 'cancel']);
+
+        Route::apiResource('sales-invoices', SalesInvoiceController::class)->only(['index', 'store', 'show']);
+        Route::post('sales-invoices/{sales_invoice}/issue',  [SalesInvoiceController::class, 'issue']);
+
+        Route::apiResource('customer-payments', CustomerPaymentController::class)->only(['index', 'store', 'show']);
+
+        Route::apiResource('customer-activities', CustomerActivityController::class);
     });
 
 });

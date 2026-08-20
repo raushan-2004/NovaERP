@@ -28,9 +28,10 @@ class InventoryService
         string $referenceType,
         int $referenceId,
         ?string $notes,
-        User $actor
+        User $actor,
+        string $movementType = 'purchase_receipt'
     ): StockLedgerEntry {
-        return DB::transaction(function () use ($product, $warehouse, $quantity, $referenceType, $referenceId, $notes, $actor) {
+        return DB::transaction(function () use ($product, $warehouse, $quantity, $referenceType, $referenceId, $notes, $actor, $movementType) {
             $balance = $this->lockBalance($warehouse, $product);
 
             $balanceBefore = $balance->quantity;
@@ -41,7 +42,7 @@ class InventoryService
 
             return $this->writeEntry(
                 $product, $warehouse,
-                'purchase_receipt', $quantity,
+                $movementType, $quantity,
                 $balanceBefore, $balanceAfter,
                 $referenceType, $referenceId,
                 $notes, $actor

@@ -70,6 +70,15 @@ class DatabaseSeeder extends Seeder
             'purchase_orders.approve',
             'goods_receipts.view', 'goods_receipts.create',
             'purchase_returns.view', 'purchase_returns.create',
+            // Stage 3 — Sales
+            'quotations.view', 'quotations.create', 'quotations.update', 'quotations.approve', 'quotations.delete',
+            'sales_orders.view', 'sales_orders.create', 'sales_orders.update', 'sales_orders.approve', 'sales_orders.delete',
+            'deliveries.view', 'deliveries.create', 'deliveries.complete',
+            'sales_returns.view', 'sales_returns.create', 'sales_returns.approve',
+            'sales_invoices.view', 'sales_invoices.create', 'sales_invoices.issue',
+            'customer_payments.view', 'customer_payments.create',
+            // Stage 3 — CRM
+            'crm.view', 'crm.create', 'crm.update',
         ];
 
         $permissionsMap = [];
@@ -123,6 +132,15 @@ class DatabaseSeeder extends Seeder
                 'purchase_orders.approve',
                 'goods_receipts.view', 'goods_receipts.create',
                 'purchase_returns.view', 'purchase_returns.create',
+                // Stage 3 — Sales
+                'quotations.view', 'quotations.create', 'quotations.update', 'quotations.approve', 'quotations.delete',
+                'sales_orders.view', 'sales_orders.create', 'sales_orders.update', 'sales_orders.approve', 'sales_orders.delete',
+                'deliveries.view', 'deliveries.create', 'deliveries.complete',
+                'sales_returns.view', 'sales_returns.create', 'sales_returns.approve',
+                'sales_invoices.view', 'sales_invoices.create', 'sales_invoices.issue',
+                'customer_payments.view', 'customer_payments.create',
+                // Stage 3 — CRM
+                'crm.view', 'crm.create', 'crm.update',
             ])->pluck('id')->toArray()
         );
 
@@ -141,6 +159,15 @@ class DatabaseSeeder extends Seeder
                 'purchase_orders.view', 'purchase_orders.create', 'purchase_orders.update',
                 'goods_receipts.view', 'goods_receipts.create',
                 'purchase_returns.view', 'purchase_returns.create',
+                // Stage 3 — Sales (view + create + update, NO approve)
+                'quotations.view', 'quotations.create', 'quotations.update', 'quotations.delete',
+                'sales_orders.view', 'sales_orders.create', 'sales_orders.update', 'sales_orders.delete',
+                'deliveries.view', 'deliveries.create', 'deliveries.complete',
+                'sales_returns.view', 'sales_returns.create',
+                'sales_invoices.view', 'sales_invoices.create', 'sales_invoices.issue',
+                'customer_payments.view', 'customer_payments.create',
+                // Stage 3 — CRM
+                'crm.view', 'crm.create', 'crm.update',
             ])->pluck('id')->toArray()
         );
 

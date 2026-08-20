@@ -36,6 +36,18 @@ import PurchaseOrdersPage from '../pages/purchasing/PurchaseOrders';
 import GoodsReceiptsPage from '../pages/purchasing/GoodsReceipts';
 import PurchaseReturnsPage from '../pages/purchasing/PurchaseReturns';
 
+// Sales Pages
+import SalesDashboardPage from '../pages/sales/SalesDashboardPage';
+import QuotationsPage from '../pages/sales/QuotationsPage';
+import SalesOrdersPage from '../pages/sales/SalesOrdersPage';
+import DeliveriesPage from '../pages/sales/DeliveriesPage';
+import SalesReturnsPage from '../pages/sales/SalesReturnsPage';
+import SalesInvoicesPage from '../pages/sales/SalesInvoicesPage';
+import CustomerPaymentsPage from '../pages/sales/CustomerPaymentsPage';
+
+// CRM Pages
+import CustomerActivitiesPage from '../pages/crm/CustomerActivitiesPage';
+
 function AppRouter() {
   return (
     <BrowserRouter>
@@ -78,6 +90,18 @@ function AppRouter() {
           <Route path="/purchasing/purchase-orders" element={<PurchaseOrdersPage />} />
           <Route path="/purchasing/goods-receipts" element={<GoodsReceiptsPage />} />
           <Route path="/purchasing/purchase-returns" element={<PurchaseReturnsPage />} />
+
+          {/* Sales */}
+          <Route path="/sales/dashboard" element={<SalesDashboardPage />} />
+          <Route path="/sales/quotations" element={<QuotationsPage />} />
+          <Route path="/sales/sales-orders" element={<SalesOrdersPage />} />
+          <Route path="/sales/deliveries" element={<DeliveriesPage />} />
+          <Route path="/sales/sales-returns" element={<SalesReturnsPage />} />
+          <Route path="/sales/sales-invoices" element={<SalesInvoicesPage />} />
+          <Route path="/sales/customer-payments" element={<CustomerPaymentsPage />} />
+
+          {/* CRM */}
+          <Route path="/crm/customer-activities" element={<CustomerActivitiesPage />} />
         </Route>
 
         {/* Redirects */}

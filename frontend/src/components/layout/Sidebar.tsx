@@ -77,6 +77,32 @@ function Sidebar() {
         { label: 'Purchase Returns', path: '/purchasing/purchase-returns', icon: Icons.Folder, permission: 'purchase_returns.view' },
       ],
     },
+    {
+      title: 'Sales',
+      permissionCheck: (has) =>
+        has('quotations.view') ||
+        has('sales_orders.view') ||
+        has('deliveries.view') ||
+        has('sales_returns.view') ||
+        has('sales_invoices.view') ||
+        has('customer_payments.view'),
+      items: [
+        { label: 'Sales Dashboard', path: '/sales/dashboard', icon: Icons.Dashboard, permission: 'sales_orders.view' },
+        { label: 'Quotations', path: '/sales/quotations', icon: Icons.Folder, permission: 'quotations.view' },
+        { label: 'Sales Orders', path: '/sales/sales-orders', icon: Icons.Folder, permission: 'sales_orders.view' },
+        { label: 'Deliveries', path: '/sales/deliveries', icon: Icons.Folder, permission: 'deliveries.view' },
+        { label: 'Sales Returns', path: '/sales/sales-returns', icon: Icons.Folder, permission: 'sales_returns.view' },
+        { label: 'Sales Invoices', path: '/sales/sales-invoices', icon: Icons.Folder, permission: 'sales_invoices.view' },
+        { label: 'Customer Payments', path: '/sales/customer-payments', icon: Icons.Folder, permission: 'customer_payments.view' },
+      ],
+    },
+    {
+      title: 'CRM',
+      permissionCheck: (has) => has('crm.view'),
+      items: [
+        { label: 'Customer Activities', path: '/crm/customer-activities', icon: Icons.Folder, permission: 'crm.view' },
+      ],
+    },
   ];
 
   return (

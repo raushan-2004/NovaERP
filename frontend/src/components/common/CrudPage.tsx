@@ -105,7 +105,7 @@ export function CrudPage<T extends { id: number | string; [key: string]: any }>(
         search: search || undefined,
         ...additionalFilters,
       };
-      const res = await apiClient.get(`/api/v1/${endpoint}`, { params });
+      const res = await apiClient.get(`/${endpoint}`, { params });
       return res.data;
     },
     enabled: hasPermission(viewPermission),
@@ -120,9 +120,9 @@ export function CrudPage<T extends { id: number | string; [key: string]: any }>(
       }
 
       if (editingRow) {
-        return apiClient.put(`/api/v1/${endpoint}/${editingRow.id}`, payload);
+        return apiClient.put(`/${endpoint}/${editingRow.id}`, payload);
       } else {
-        return apiClient.post(`/api/v1/${endpoint}`, payload);
+        return apiClient.post(`/${endpoint}`, payload);
       }
     },
     onSuccess: () => {
@@ -143,7 +143,7 @@ export function CrudPage<T extends { id: number | string; [key: string]: any }>(
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string | number) => {
-      return apiClient.delete(`/api/v1/${endpoint}/${id}`);
+      return apiClient.delete(`/${endpoint}/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [endpoint] });

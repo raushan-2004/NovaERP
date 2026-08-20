@@ -71,7 +71,7 @@ export function PurchaseRequestsPage() {
   const { data, isLoading } = useQuery({
     queryKey: ['purchase-requests', page, perPage, search],
     queryFn: async () => {
-      const res = await apiClient.get('/api/v1/purchase-requests', {
+      const res = await apiClient.get('/purchase-requests', {
         params: { page, per_page: perPage, search: search || undefined },
       });
       return res.data;
@@ -82,7 +82,7 @@ export function PurchaseRequestsPage() {
   const { data: companies } = useQuery({
     queryKey: ['options', 'companies'],
     queryFn: async () => {
-      const res = await apiClient.get('/api/v1/companies');
+      const res = await apiClient.get('/companies');
       return res.data.data;
     },
     enabled: modalOpen || convertModalOpen,
@@ -91,7 +91,7 @@ export function PurchaseRequestsPage() {
   const { data: branches } = useQuery({
     queryKey: ['options', 'branches'],
     queryFn: async () => {
-      const res = await apiClient.get('/api/v1/branches');
+      const res = await apiClient.get('/branches');
       return res.data.data;
     },
     enabled: modalOpen || convertModalOpen,
@@ -100,7 +100,7 @@ export function PurchaseRequestsPage() {
   const { data: suppliers } = useQuery({
     queryKey: ['options', 'suppliers'],
     queryFn: async () => {
-      const res = await apiClient.get('/api/v1/suppliers');
+      const res = await apiClient.get('/suppliers');
       return res.data.data;
     },
     enabled: convertModalOpen,
@@ -109,7 +109,7 @@ export function PurchaseRequestsPage() {
   const { data: products } = useQuery({
     queryKey: ['options', 'products'],
     queryFn: async () => {
-      const res = await apiClient.get('/api/v1/products');
+      const res = await apiClient.get('/products');
       return res.data.data;
     },
     enabled: modalOpen,
@@ -118,7 +118,7 @@ export function PurchaseRequestsPage() {
   const { data: units } = useQuery({
     queryKey: ['options', 'units'],
     queryFn: async () => {
-      const res = await apiClient.get('/api/v1/units');
+      const res = await apiClient.get('/units');
       return res.data.data;
     },
     enabled: modalOpen,
@@ -127,7 +127,7 @@ export function PurchaseRequestsPage() {
   // Mutations
   const createMutation = useMutation({
     mutationFn: async () => {
-      return apiClient.post('/api/v1/purchase-requests', {
+      return apiClient.post('/purchase-requests', {
         ...formData,
         lines: formLines,
       });
@@ -148,7 +148,7 @@ export function PurchaseRequestsPage() {
 
   const transitionMutation = useMutation({
     mutationFn: async ({ id, action }: { id: number; action: string }) => {
-      return apiClient.post(`/api/v1/purchase-requests/${id}/${action}`);
+      return apiClient.post(`/purchase-requests/${id}/${action}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['purchase-requests'] });
@@ -161,7 +161,7 @@ export function PurchaseRequestsPage() {
   const convertMutation = useMutation({
     mutationFn: async () => {
       if (!selectedPr) return;
-      return apiClient.post(`/api/v1/purchase-requests/${selectedPr.id}/convert-to-po`, {
+      return apiClient.post(`/purchase-requests/${selectedPr.id}/convert-to-po`, {
         company_id: selectedPr.company_id,
         branch_id: selectedPr.branch_id,
         ...convertData,

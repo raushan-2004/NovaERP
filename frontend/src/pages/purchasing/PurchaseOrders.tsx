@@ -82,7 +82,7 @@ export function PurchaseOrdersPage() {
   const { data, isLoading } = useQuery({
     queryKey: ['purchase-orders', page, perPage, search],
     queryFn: async () => {
-      const res = await apiClient.get('/api/v1/purchase-orders', {
+      const res = await apiClient.get('/purchase-orders', {
         params: { page, per_page: perPage, search: search || undefined },
       });
       return res.data;
@@ -93,7 +93,7 @@ export function PurchaseOrdersPage() {
   const { data: companies } = useQuery({
     queryKey: ['options', 'companies'],
     queryFn: async () => {
-      const res = await apiClient.get('/api/v1/companies');
+      const res = await apiClient.get('/companies');
       return res.data.data;
     },
     enabled: modalOpen,
@@ -102,7 +102,7 @@ export function PurchaseOrdersPage() {
   const { data: branches } = useQuery({
     queryKey: ['options', 'branches'],
     queryFn: async () => {
-      const res = await apiClient.get('/api/v1/branches');
+      const res = await apiClient.get('/branches');
       return res.data.data;
     },
     enabled: modalOpen,
@@ -111,7 +111,7 @@ export function PurchaseOrdersPage() {
   const { data: suppliers } = useQuery({
     queryKey: ['options', 'suppliers'],
     queryFn: async () => {
-      const res = await apiClient.get('/api/v1/suppliers');
+      const res = await apiClient.get('/suppliers');
       return res.data.data;
     },
     enabled: modalOpen,
@@ -120,7 +120,7 @@ export function PurchaseOrdersPage() {
   const { data: warehouses } = useQuery({
     queryKey: ['options', 'warehouses'],
     queryFn: async () => {
-      const res = await apiClient.get('/api/v1/warehouses');
+      const res = await apiClient.get('/warehouses');
       return res.data.data;
     },
     enabled: receiveModalOpen,
@@ -129,7 +129,7 @@ export function PurchaseOrdersPage() {
   const { data: products } = useQuery({
     queryKey: ['options', 'products'],
     queryFn: async () => {
-      const res = await apiClient.get('/api/v1/products');
+      const res = await apiClient.get('/products');
       return res.data.data;
     },
     enabled: modalOpen,
@@ -138,7 +138,7 @@ export function PurchaseOrdersPage() {
   const { data: units } = useQuery({
     queryKey: ['options', 'units'],
     queryFn: async () => {
-      const res = await apiClient.get('/api/v1/units');
+      const res = await apiClient.get('/units');
       return res.data.data;
     },
     enabled: modalOpen,
@@ -147,7 +147,7 @@ export function PurchaseOrdersPage() {
   // Mutations
   const createMutation = useMutation({
     mutationFn: async () => {
-      return apiClient.post('/api/v1/purchase-orders', {
+      return apiClient.post('/purchase-orders', {
         ...formData,
         lines: formLines,
       });
@@ -168,7 +168,7 @@ export function PurchaseOrdersPage() {
 
   const transitionMutation = useMutation({
     mutationFn: async ({ id, action }: { id: number; action: string }) => {
-      return apiClient.post(`/api/v1/purchase-orders/${id}/${action}`);
+      return apiClient.post(`/purchase-orders/${id}/${action}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['purchase-orders'] });
@@ -185,7 +185,7 @@ export function PurchaseOrdersPage() {
         purchase_order_line_id: parseInt(poLineId),
         quantity_received: parseFloat(qty),
       }));
-      return apiClient.post('/api/v1/goods-receipts', {
+      return apiClient.post('/goods-receipts', {
         purchase_order_id: selectedPo.id,
         warehouse_id: parseInt(receiveData.warehouse_id),
         received_date: receiveData.received_date,

@@ -46,7 +46,7 @@ export function StockTransfersPage() {
   const { data, isLoading } = useQuery({
     queryKey: ['stock-transfers', page, perPage, search],
     queryFn: async () => {
-      const res = await apiClient.get('/api/v1/stock-transfers', {
+      const res = await apiClient.get('/stock-transfers', {
         params: { page, per_page: perPage, search: search || undefined },
       });
       return res.data;
@@ -57,7 +57,7 @@ export function StockTransfersPage() {
   const { data: warehouses } = useQuery({
     queryKey: ['options', 'warehouses'],
     queryFn: async () => {
-      const res = await apiClient.get('/api/v1/warehouses');
+      const res = await apiClient.get('/warehouses');
       return res.data.data;
     },
     enabled: modalOpen,
@@ -66,7 +66,7 @@ export function StockTransfersPage() {
   const { data: products } = useQuery({
     queryKey: ['options', 'products'],
     queryFn: async () => {
-      const res = await apiClient.get('/api/v1/products');
+      const res = await apiClient.get('/products');
       return res.data.data;
     },
     enabled: modalOpen,
@@ -75,7 +75,7 @@ export function StockTransfersPage() {
   // Mutations
   const createMutation = useMutation({
     mutationFn: async () => {
-      return apiClient.post('/api/v1/stock-transfers', formData);
+      return apiClient.post('/stock-transfers', formData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['stock-transfers'] });
@@ -92,7 +92,7 @@ export function StockTransfersPage() {
 
   const completeMutation = useMutation({
     mutationFn: async (id: number) => {
-      return apiClient.post(`/api/v1/stock-transfers/${id}/complete`);
+      return apiClient.post(`/stock-transfers/${id}/complete`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['stock-transfers'] });
@@ -106,7 +106,7 @@ export function StockTransfersPage() {
 
   const cancelMutation = useMutation({
     mutationFn: async (id: number) => {
-      return apiClient.post(`/api/v1/stock-transfers/${id}/cancel`);
+      return apiClient.post(`/stock-transfers/${id}/cancel`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['stock-transfers'] });

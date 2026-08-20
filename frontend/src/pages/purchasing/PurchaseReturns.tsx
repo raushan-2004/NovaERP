@@ -57,7 +57,7 @@ export function PurchaseReturnsPage() {
   const { data, isLoading } = useQuery({
     queryKey: ['purchase-returns', page, perPage, search],
     queryFn: async () => {
-      const res = await apiClient.get('/api/v1/purchase-returns', {
+      const res = await apiClient.get('/purchase-returns', {
         params: { page, per_page: perPage, search: search || undefined },
       });
       return res.data;
@@ -68,7 +68,7 @@ export function PurchaseReturnsPage() {
   const { data: grns } = useQuery({
     queryKey: ['options', 'goods-receipts'],
     queryFn: async () => {
-      const res = await apiClient.get('/api/v1/goods-receipts');
+      const res = await apiClient.get('/goods-receipts');
       return res.data.data;
     },
     enabled: modalOpen,
@@ -84,7 +84,7 @@ export function PurchaseReturnsPage() {
     }
     const fetchGrnDetails = async () => {
       try {
-        const res = await apiClient.get(`/api/v1/goods-receipts/${formData.goods_receipt_id}`);
+        const res = await apiClient.get(`/goods-receipts/${formData.goods_receipt_id}`);
         const lines = res.data.data.lines || [];
         setGrnLines(lines);
 
@@ -115,7 +115,7 @@ export function PurchaseReturnsPage() {
           notes: returnNotes[parseInt(grnLineId)] || null,
         }));
 
-      return apiClient.post('/api/v1/purchase-returns', {
+      return apiClient.post('/purchase-returns', {
         ...formData,
         lines,
       });

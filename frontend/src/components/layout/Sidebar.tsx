@@ -56,6 +56,27 @@ function Sidebar() {
         { label: 'Warehouses', path: '/master/warehouses', icon: Icons.Settings, permission: 'warehouses.view' },
       ],
     },
+    {
+      title: 'Inventory',
+      permissionCheck: (has) => has('inventory.view'),
+      items: [
+        { label: 'Warehouse Locations', path: '/inventory/warehouse-locations', icon: Icons.Folder, permission: 'inventory.view' },
+        { label: 'Stock Balances', path: '/inventory/stock-balances', icon: Icons.Folder, permission: 'inventory.view' },
+        { label: 'Stock Ledger', path: '/inventory/stock-ledger', icon: Icons.Folder, permission: 'inventory.view' },
+        { label: 'Stock Transfers', path: '/inventory/stock-transfers', icon: Icons.Folder, permission: 'inventory.view' },
+        { label: 'Stock Adjustments', path: '/inventory/stock-adjustments', icon: Icons.Folder, permission: 'inventory.view' },
+      ],
+    },
+    {
+      title: 'Purchasing',
+      permissionCheck: (has) => has('purchase_orders.view') || has('purchase_requests.view'),
+      items: [
+        { label: 'Purchase Requests', path: '/purchasing/purchase-requests', icon: Icons.Folder, permission: 'purchase_requests.view' },
+        { label: 'Purchase Orders', path: '/purchasing/purchase-orders', icon: Icons.Folder, permission: 'purchase_orders.view' },
+        { label: 'Goods Receipts', path: '/purchasing/goods-receipts', icon: Icons.Folder, permission: 'goods_receipts.view' },
+        { label: 'Purchase Returns', path: '/purchasing/purchase-returns', icon: Icons.Folder, permission: 'purchase_returns.view' },
+      ],
+    },
   ];
 
   return (
@@ -134,7 +155,7 @@ function Sidebar() {
       {/* Footer */}
       {!collapsed && (
         <div className="nova-sidebar-footer p-4 border-t border-nova-700/60 text-center text-[10px] text-text-muted">
-          <span>NovaTech v1.0 • Stage 1</span>
+          <span>NovaTech v1.0 • Stage 2</span>
         </div>
       )}
     </aside>

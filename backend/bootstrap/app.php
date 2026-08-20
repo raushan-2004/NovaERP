@@ -7,6 +7,8 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Support\ApiResponse;
+use App\Exceptions\InvalidStatusTransitionException;
+use App\Exceptions\InsufficientStockException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -39,4 +41,19 @@ return Application::configure(basePath: dirname(__DIR__))
                 return ApiResponse::notFound('The requested resource was not found.');
             }
         });
+
+        // 422 — Invalid workflow status transition
+        $exceptions->render(function (InvalidStatusTransitionException $e, Request $request) {
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return ApiResponse::error($e->getMessage(), 422);
+            }
+        });
+
+        // 422 — Insufficient stock for a stock operation
+        $exceptions->render(function (InsufficientStockException $e, Request $request) {
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return ApiResponse::error($e->getMessage(), 422);
+            }
+        });
     })->create();
+

@@ -23,4 +23,24 @@ return [
     |
     */
     'seed_admin_password' => env('NOVA_ADMIN_PASSWORD'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Allow Negative Stock
+    |--------------------------------------------------------------------------
+    |
+    | When false (default), InventoryService will reject any stock operation
+    | that would result in a negative balance. The operation will throw an
+    | InsufficientStockException which maps to a 422 API response.
+    |
+    | Enabling this is a DELIBERATE business/inventory configuration decision
+    | (e.g. pre-order fulfilment, consignment models). It should NOT be enabled
+    | without understanding the full operational implications for your inventory
+    | accuracy, financial reporting, and supplier reconciliation processes.
+    |
+    | This setting is NOT a user permission — it is an operational toggle.
+    |
+    */
+    'allow_negative_stock' => env('NOVA_ALLOW_NEGATIVE_STOCK', false),
 ];
+

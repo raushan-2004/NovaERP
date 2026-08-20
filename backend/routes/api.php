@@ -16,6 +16,17 @@ use App\Http\Controllers\Api\V1\Master\ProductController;
 use App\Http\Controllers\Api\V1\Master\CustomerController;
 use App\Http\Controllers\Api\V1\Master\SupplierController;
 use App\Http\Controllers\Api\V1\Master\WarehouseController;
+// Stage 2 — Inventory
+use App\Http\Controllers\Api\V1\Inventory\WarehouseLocationController;
+use App\Http\Controllers\Api\V1\Inventory\StockBalanceController;
+use App\Http\Controllers\Api\V1\Inventory\StockLedgerController;
+use App\Http\Controllers\Api\V1\Inventory\StockTransferController;
+use App\Http\Controllers\Api\V1\Inventory\StockAdjustmentController;
+// Stage 2 — Purchasing
+use App\Http\Controllers\Api\V1\Purchasing\PurchaseRequestController;
+use App\Http\Controllers\Api\V1\Purchasing\PurchaseOrderController;
+use App\Http\Controllers\Api\V1\Purchasing\GoodsReceiptController;
+use App\Http\Controllers\Api\V1\Purchasing\PurchaseReturnController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -66,6 +77,47 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('customers', CustomerController::class);
         Route::apiResource('suppliers', SupplierController::class);
         Route::apiResource('warehouses', WarehouseController::class);
+
+        // ---------------------------------------------------------------
+        // Stage 2 — Inventory
+        // ---------------------------------------------------------------
+        Route::apiResource('warehouse-locations', WarehouseLocationController::class);
+
+        Route::get('stock-balances', [StockBalanceController::class, 'index']);
+        Route::get('stock-ledger',   [StockLedgerController::class, 'index']);
+
+        Route::apiResource('stock-transfers', StockTransferController::class)
+            ->only(['index', 'store', 'show']);
+        Route::post('stock-transfers/{stock_transfer}/complete', [StockTransferController::class, 'complete']);
+        Route::post('stock-transfers/{stock_transfer}/cancel',   [StockTransferController::class, 'cancel']);
+
+        Route::apiResource('stock-adjustments', StockAdjustmentController::class)
+            ->only(['index', 'store', 'show']);
+
+        // ---------------------------------------------------------------
+        // Stage 2 — Purchasing
+        // ---------------------------------------------------------------
+        Route::apiResource('purchase-requests', PurchaseRequestController::class);
+        Route::post('purchase-requests/{purchase_request}/submit',        [PurchaseRequestController::class, 'submit']);
+        Route::post('purchase-requests/{purchase_request}/approve',       [PurchaseRequestController::class, 'approve']);
+        Route::post('purchase-requests/{purchase_request}/reject',        [PurchaseRequestController::class, 'reject']);
+        Route::post('purchase-requests/{purchase_request}/convert-to-po', [PurchaseRequestController::class, 'convertToPo']);
+
+        Route::apiResource('purchase-orders', PurchaseOrderController::class);
+        Route::post('purchase-orders/{purchase_order}/submit',  [PurchaseOrderController::class, 'submit']);
+        Route::post('purchase-orders/{purchase_order}/approve', [PurchaseOrderController::class, 'approve']);
+        Route::post('purchase-orders/{purchase_order}/send',    [PurchaseOrderController::class, 'send']);
+        Route::post('purchase-orders/{purchase_order}/close',   [PurchaseOrderController::class, 'close']);
+        Route::post('purchase-orders/{purchase_order}/cancel',  [PurchaseOrderController::class, 'cancel']);
+
+        Route::apiResource('goods-receipts', GoodsReceiptController::class)
+            ->only(['index', 'store', 'show']);
+        Route::post('goods-receipts/{goods_receipt}/complete', [GoodsReceiptController::class, 'complete']);
+
+        Route::apiResource('purchase-returns', PurchaseReturnController::class)
+            ->only(['index', 'store', 'show']);
+        Route::post('purchase-returns/{purchase_return}/complete', [PurchaseReturnController::class, 'complete']);
     });
 
 });
+

@@ -23,6 +23,19 @@ import CustomersPage from '../pages/master/Customers';
 import SuppliersPage from '../pages/master/Suppliers';
 import WarehousesPage from '../pages/master/Warehouses';
 
+// Inventory Pages
+import WarehouseLocationsPage from '../pages/inventory/WarehouseLocations';
+import StockBalancesPage from '../pages/inventory/StockBalances';
+import StockLedgerPage from '../pages/inventory/StockLedger';
+import StockTransfersPage from '../pages/inventory/StockTransfers';
+import StockAdjustmentsPage from '../pages/inventory/StockAdjustments';
+
+// Purchasing Pages
+import PurchaseRequestsPage from '../pages/purchasing/PurchaseRequests';
+import PurchaseOrdersPage from '../pages/purchasing/PurchaseOrders';
+import GoodsReceiptsPage from '../pages/purchasing/GoodsReceipts';
+import PurchaseReturnsPage from '../pages/purchasing/PurchaseReturns';
+
 function AppRouter() {
   return (
     <BrowserRouter>
@@ -52,6 +65,19 @@ function AppRouter() {
           <Route path="/master/customers" element={<CustomersPage />} />
           <Route path="/master/suppliers" element={<SuppliersPage />} />
           <Route path="/master/warehouses" element={<WarehousesPage />} />
+
+          {/* Inventory */}
+          <Route path="/inventory/warehouse-locations" element={<WarehouseLocationsPage />} />
+          <Route path="/inventory/stock-balances" element={<StockBalancesPage />} />
+          <Route path="/inventory/stock-ledger" element={<StockLedgerPage />} />
+          <Route path="/inventory/stock-transfers" element={<StockTransfersPage />} />
+          <Route path="/inventory/stock-adjustments" element={<StockAdjustmentsPage />} />
+
+          {/* Purchasing */}
+          <Route path="/purchasing/purchase-requests" element={<PurchaseRequestsPage />} />
+          <Route path="/purchasing/purchase-orders" element={<PurchaseOrdersPage />} />
+          <Route path="/purchasing/goods-receipts" element={<GoodsReceiptsPage />} />
+          <Route path="/purchasing/purchase-returns" element={<PurchaseReturnsPage />} />
         </Route>
 
         {/* Redirects */}
@@ -63,3 +89,4 @@ function AppRouter() {
 }
 
 export default AppRouter;
+

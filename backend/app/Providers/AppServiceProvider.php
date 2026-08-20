@@ -24,7 +24,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Explicitly register policies
-        Gate::policy(\App\Models\Product::class, \App\Policies\ProductPolicy::class);
+        Gate::policy(\App\Models\Product::class,         \App\Policies\ProductPolicy::class);
+        Gate::policy(\App\Models\StockTransfer::class,   \App\Policies\StockTransferPolicy::class);
+        Gate::policy(\App\Models\StockAdjustment::class, \App\Policies\StockAdjustmentPolicy::class);
+        Gate::policy(\App\Models\PurchaseRequest::class, \App\Policies\PurchaseRequestPolicy::class);
+        Gate::policy(\App\Models\PurchaseOrder::class,   \App\Policies\PurchaseOrderPolicy::class);
+        Gate::policy(\App\Models\GoodsReceipt::class,    \App\Policies\GoodsReceiptPolicy::class);
+        Gate::policy(\App\Models\PurchaseReturn::class,  \App\Policies\PurchaseReturnPolicy::class);
 
         // 1. Super Admin permission-level bypass in Gate::before()
         Gate::before(function (User $user, string $ability, array $args) {
@@ -44,14 +50,26 @@ class AppServiceProvider extends ServiceProvider
 
         // 2. Dynamically define gates for all system permissions
         $permissions = [
+            // RBAC
             'users.view', 'users.create', 'users.update', 'users.delete',
             'roles.view', 'roles.create', 'roles.update', 'roles.delete',
+            // Organization
             'organization.view', 'organization.create', 'organization.update', 'organization.delete',
             'employees.view', 'employees.create', 'employees.update', 'employees.delete',
+            // Master Data
             'products.view', 'products.create', 'products.update', 'products.delete',
             'customers.view', 'customers.create', 'customers.update', 'customers.delete',
             'suppliers.view', 'suppliers.create', 'suppliers.update', 'suppliers.delete',
             'warehouses.view', 'warehouses.create', 'warehouses.update', 'warehouses.delete',
+            // Inventory
+            'inventory.view', 'inventory.adjust',
+            // Purchasing
+            'purchase_requests.view', 'purchase_requests.create', 'purchase_requests.update', 'purchase_requests.delete',
+            'purchase_requests.approve',
+            'purchase_orders.view', 'purchase_orders.create', 'purchase_orders.update', 'purchase_orders.delete',
+            'purchase_orders.approve',
+            'goods_receipts.view', 'goods_receipts.create',
+            'purchase_returns.view', 'purchase_returns.create',
         ];
 
         foreach ($permissions as $permission) {
@@ -61,3 +79,4 @@ class AppServiceProvider extends ServiceProvider
         }
     }
 }
+

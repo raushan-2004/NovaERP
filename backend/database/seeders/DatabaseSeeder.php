@@ -50,14 +50,26 @@ class DatabaseSeeder extends Seeder
 
         // 1. Seed Permissions (system-defined capabilities, no soft-delete)
         $permissionsList = [
+            // RBAC
             'users.view', 'users.create', 'users.update', 'users.delete',
             'roles.view', 'roles.create', 'roles.update', 'roles.delete',
+            // Organization
             'organization.view', 'organization.create', 'organization.update', 'organization.delete',
             'employees.view', 'employees.create', 'employees.update', 'employees.delete',
+            // Master Data
             'products.view', 'products.create', 'products.update', 'products.delete',
             'customers.view', 'customers.create', 'customers.update', 'customers.delete',
             'suppliers.view', 'suppliers.create', 'suppliers.update', 'suppliers.delete',
             'warehouses.view', 'warehouses.create', 'warehouses.update', 'warehouses.delete',
+            // Stage 2 — Inventory
+            'inventory.view', 'inventory.adjust',
+            // Stage 2 — Purchasing
+            'purchase_requests.view', 'purchase_requests.create', 'purchase_requests.update', 'purchase_requests.delete',
+            'purchase_requests.approve',
+            'purchase_orders.view', 'purchase_orders.create', 'purchase_orders.update', 'purchase_orders.delete',
+            'purchase_orders.approve',
+            'goods_receipts.view', 'goods_receipts.create',
+            'purchase_returns.view', 'purchase_returns.create',
         ];
 
         $permissionsMap = [];
@@ -102,6 +114,15 @@ class DatabaseSeeder extends Seeder
                 'customers.view', 'customers.create', 'customers.update',
                 'suppliers.view', 'suppliers.create', 'suppliers.update',
                 'warehouses.view', 'warehouses.create', 'warehouses.update',
+                // Stage 2 — Inventory
+                'inventory.view', 'inventory.adjust',
+                // Stage 2 — Purchasing
+                'purchase_requests.view', 'purchase_requests.create', 'purchase_requests.update', 'purchase_requests.delete',
+                'purchase_requests.approve',
+                'purchase_orders.view', 'purchase_orders.create', 'purchase_orders.update', 'purchase_orders.delete',
+                'purchase_orders.approve',
+                'goods_receipts.view', 'goods_receipts.create',
+                'purchase_returns.view', 'purchase_returns.create',
             ])->pluck('id')->toArray()
         );
 
@@ -113,6 +134,13 @@ class DatabaseSeeder extends Seeder
                 'customers.view', 'customers.create', 'customers.update',
                 'suppliers.view', 'suppliers.create', 'suppliers.update',
                 'warehouses.view', 'warehouses.create', 'warehouses.update',
+                // Stage 2 — Inventory (view only, can adjust)
+                'inventory.view', 'inventory.adjust',
+                // Stage 2 — Purchasing (view + create, NO approve)
+                'purchase_requests.view', 'purchase_requests.create', 'purchase_requests.update',
+                'purchase_orders.view', 'purchase_orders.create', 'purchase_orders.update',
+                'goods_receipts.view', 'goods_receipts.create',
+                'purchase_returns.view', 'purchase_returns.create',
             ])->pluck('id')->toArray()
         );
 
@@ -122,6 +150,11 @@ class DatabaseSeeder extends Seeder
                 'customers.view',
                 'suppliers.view',
                 'warehouses.view',
+                'inventory.view',
+                'purchase_requests.view',
+                'purchase_orders.view',
+                'goods_receipts.view',
+                'purchase_returns.view',
             ])->pluck('id')->toArray()
         );
 
